@@ -7,7 +7,7 @@
     <groupId>com.lueing.oh</groupId>
     <artifactId>one-hammer</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>one-hammer-data</module>
         <module>one-hammer-service</module>

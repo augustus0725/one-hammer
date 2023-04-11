@@ -26,7 +26,7 @@
     </target>
 
     <target name="dist" depends="compile" description="generate the distribution">
-        <move file="./one-hammer-daemon/one-hammer-daemon-service/one-hammer-daemon-app/target/one-hammer-daemon-app-0.0.1-SNAPSHOT.jar" todir="${build}/one-hammer"/>
+        <move file="./one-hammer-daemon/one-hammer-service/one-hammer-app/target/one-hammer-app-0.0.1-SNAPSHOT.jar" todir="${build}/one-hammer"/>
         <zip destfile="${destfile}" basedir="${build}/one-hammer" update="true"/>
     </target>
 
