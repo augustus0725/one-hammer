@@ -1,0 +1,60 @@
+<project name="one-hammer" default="dist" basedir=".">
+    <description>
+        one-hammer is a new way to use apache nifi.
+    </description>
+    <!-- set global properties for this build -->
+    <property name="one-hammer-daemon" location="one-hammer-daemon"/>
+    <property name="build" location="build"/>
+    <property name="version" location="0.0.1"/>
+    <property name="destfile" location="./build/one-hammer-0.0.1.zip"/>
+
+    <!-- import system env -->
+    <property environment="env"/>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/one-hammer"/>
+    </target>
+
+    <target name="compile" depends="init"
+            description="compile the source">
+        <!-- compile one-hammer-daemon -->
+        <maven src="${one-hammer-daemon}" arg="package"/>
+    </target>
+
+    <target name="dist" depends="compile" description="generate the distribution">
+        <move file="./one-hammer-daemon/one-hammer-daemon-service/one-hammer-daemon-app/target/one-hammer-daemon-app-0.0.1-SNAPSHOT.jar" todir="${build}/one-hammer"/>
+        <zip destfile="${destfile}" basedir="${build}/one-hammer" update="true"/>
+    </target>
+
+    <target name="clean"
+            description="clean up">
+        <delete dir="${build}"/>
+        <maven src="one-hammer-daemon" arg="clean" />
+    </target>
+
+    <macrodef name="maven">
+        <attribute name="src" default="."/>
+        <attribute name="arg" default="compile"/>
+        <sequential>
+            <exec dir="@{src}" executable="cmd.exe" os="Windows 7">
+                <arg line="/c ${env.MAVEN_HOME}\bin\mvn.cmd @{arg}"/>
+            </exec>
+            <exec dir="@{src}" executable="cmd.exe" os="Windows 8.1">
+                <arg line="/c ${env.MAVEN_HOME}\bin\mvn.cmd @{arg}"/>
+            </exec>
+            <exec dir="@{src}" executable="cmd.exe" os="Windows 10">
+                <arg line="/c ${env.MAVEN_HOME}\bin\mvn.cmd @{arg}"/>
+            </exec>
+            <exec dir="@{src}" executable="cmd.exe" os="Windows 11">
+                <arg line="/c ${env.MAVEN_HOME}\bin\mvn.cmd @{arg}"/>
+            </exec>
+            <exec dir="@{src}" executable="mvn" os="Linux">
+                <arg line="@{arg}"/>
+            </exec>
+        </sequential>
+    </macrodef>
+</project>

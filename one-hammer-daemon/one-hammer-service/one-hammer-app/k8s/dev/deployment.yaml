@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: one-hammer-app
+  namespace: dev
+  labels:
+    k8s.kuboard.cn/layer: svc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: one-hammer-app
+  template:
+    metadata:
+      labels:
+        app: one-hammer-app
+    spec:
+      # nodeSelector:
+      #   online: "false"
+      containers:
+        - name: one-hammer-app
+          image: 192.168.0.178:8088/one-hammer-app:dev
+          imagePullPolicy: Always
+          command: [ "/bin/bash" ]
+          args: [ "/opt/app/docker-entrypoint.sh", "dev" ]
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            - name: LANG
+              value: "en_US.UTF-8"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "512m"
+          ports:
+            - containerPort: 8080

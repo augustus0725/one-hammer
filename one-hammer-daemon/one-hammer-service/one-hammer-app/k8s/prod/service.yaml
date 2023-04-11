@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: one-hammer-app
+  namespace: prod
+spec:
+  selector:
+    app: one-hammer-app
+  ports:
+    - port: 8080
+      targetPort: 8080
