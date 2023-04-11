@@ -4,7 +4,7 @@ import com.lueing.oh.jpa.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * @author zhangcanbin@hongwangweb.com
+ * @author yesido0725@gmail.com
  * @date 2022/5/30 17:06
  */
 public interface PgUserRepository extends JpaRepository<User, String> {

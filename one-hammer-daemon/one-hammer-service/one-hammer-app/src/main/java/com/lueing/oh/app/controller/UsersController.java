@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author zhangcanbin@hongwangweb.com
+ * @author yesido0725@gmail.com
  * @date 2022/5/30 17:06
  */
 @RestController

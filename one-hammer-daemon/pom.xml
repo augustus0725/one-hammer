@@ -12,6 +12,7 @@
         <module>one-hammer-data</module>
         <module>one-hammer-service</module>
         <module>one-hammer-common</module>
+        <module>one-hammer-integrations</module>
     </modules>
 
     <properties>
@@ -59,6 +60,11 @@
                 <version>${springboot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>2.0</version>
             </dependency>
             <!-- 数据库驱动 -->
             <dependency>
