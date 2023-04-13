@@ -10,6 +10,21 @@ import java.util.Map;
 @Service
 public class OneHammerDagImpl implements OneHammerDag {
     @Override
+    public void createNamespace(String namespace) {
+
+    }
+
+    @Override
+    public List<String> namespaces() {
+        return null;
+    }
+
+    @Override
+    public void deleteNamespace(String namespace) {
+
+    }
+
+    @Override
     public String importDagTemplate(String namespace, String templateName, Path path) {
         return null;
     }

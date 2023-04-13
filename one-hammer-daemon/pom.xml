@@ -27,6 +27,8 @@
         <jacoco.version>0.8.8</jacoco.version>
         <!-- pg driver version       -->
         <postgresql.version>42.5.4</postgresql.version>
+        <!-- feign -->
+        <openfeign.version>12.3</openfeign.version>
     </properties>
 
     <dependencyManagement>
@@ -50,8 +52,19 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.9.0</version>
+                <version>2.10.1</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${openfeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-gson</artifactId>
+                <version>${openfeign.version}</version>
+            </dependency>
+
             <!-- spring -->
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
