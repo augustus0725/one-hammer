@@ -285,7 +285,23 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
     public void deleteInstance(String namespace, String instanceId) throws OneHammerDagException {
-
+        stopInstance(namespace, instanceId);
+        // disable the instance
+        Ds139Feign.ToggleDefinitionResp toggleResp = ds139Feign.toggleDefinition(Collections.singletonMap(
+                "token",
+                ds139Token
+        ), namespace, Long.parseLong(instanceId), 0);
+        if (0 != toggleResp.getCode()) {
+            throw new OneHammerDagException(toggleResp.getMsg());
+        }
+        // delete the instance
+        ds139Feign.deleteDefinition(Collections.singletonMap(
+                "token",
+                ds139Token
+        ), namespace, Collections.singletonMap("processDefinitionId", instanceId));
+        // update database info
+        instanceRepository.deleteByNamespaceAndInstanceId(namespace, Long.parseLong(instanceId));
     }
 }

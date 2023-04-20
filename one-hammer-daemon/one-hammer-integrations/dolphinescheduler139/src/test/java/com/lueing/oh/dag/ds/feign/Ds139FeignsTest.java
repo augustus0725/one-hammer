@@ -123,6 +123,20 @@ public class Ds139FeignsTest {
     }
 
     @Test
+    public void testDeleteDefinition() {
+        Ds139Feign ds139Feign = Ds139Feigns.create("http://192.168.0.16:12345");
+
+        Ds139Feign.DeleteDefinitionResp resp = ds139Feign.deleteDefinition(Collections.singletonMap(
+                        "token",
+                        TOKEN
+                ),
+                "feign-demo",
+                Collections.singletonMap("processDefinitionId", 2)
+                );
+        assertEquals(new Integer(0), resp.getCode());
+    }
+
+    @Test
     public void testStartDefinitionOnce() {
         Ds139Feign ds139Feign = Ds139Feigns.create("http://192.168.0.16:12345");
 

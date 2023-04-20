@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface Ds139InstanceRepository extends JpaRepository<Ds139Instance, String> {
     Optional<Ds139Instance> findByInstanceId(Long instanceId);
+
+    void deleteByNamespaceAndInstanceId(String namespace, long parseLong);
 }

@@ -110,6 +110,22 @@ public interface Ds139Feign {
         private Integer data;
     }
 
+    @RequestLine("GET /dolphinscheduler/projects/{namespace}/process/delete")
+    DeleteDefinitionResp deleteDefinition(@HeaderMap Map<String, String> headers, @Param("namespace") String namespace,
+                                       @QueryMap Map<String, Object> queryMap);
+
+    @Data
+    class DeleteDefinitionResp {
+        private Integer code;
+        private String msg;
+        private Integer data;
+    }
+
+    @RequestLine("POST /dolphinscheduler/projects/{namespace}/executors/start-process-instance")
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    ScheduleStatusResp startOnce(@HeaderMap Map<String, String> headers, @Param("namespace") String namespace,
+                                 DolphinSchedulerOnce scheduler);
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -129,10 +145,4 @@ public interface Ds139Feign {
         private String workerGroup;
         private String processDefinitionId;
     }
-
-    @RequestLine("POST /dolphinscheduler/projects/{namespace}/executors/start-process-instance")
-    @Headers("Content-Type: application/x-www-form-urlencoded")
-    ScheduleStatusResp startOnce(@HeaderMap Map<String, String> headers, @Param("namespace") String namespace,
-                                 DolphinSchedulerOnce scheduler);
-
 }
