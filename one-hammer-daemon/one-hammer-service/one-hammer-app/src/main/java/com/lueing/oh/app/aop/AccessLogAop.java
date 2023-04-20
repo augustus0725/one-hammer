@@ -33,7 +33,6 @@ public class AccessLogAop {
 
     @Pointcut("@annotation(com.lueing.oh.commons.annotation.Loggable)")
     public void accessLogWithAnnotation() {
-        log.info("Pointcut, do nothing.");
     }
 
     @Around(value = "accessLogWithAnnotation()")
