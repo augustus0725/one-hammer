@@ -1,16 +1,16 @@
 package com.lueing.oh.dag.ds;
 
+import com.lueing.oh.dag.DagTemplate;
 import com.lueing.oh.dag.OneHammerDag;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class OneHammerDagImpl implements OneHammerDag {
     @Override
-    public void createNamespace(String namespace) {
+    public void createNamespace(String namespace, String description) {
 
     }
 
@@ -25,7 +25,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public String importDagTemplate(String namespace, String templateName, Path path) {
+    public String loadDagTemplate(String namespace, String templateName, String path, String description) {
         return null;
     }
 
@@ -35,7 +35,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public List<String> templates(String namespace) {
+    public List<DagTemplate> templates(String namespace) {
         return null;
     }
 

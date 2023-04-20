@@ -17,6 +17,7 @@
         <module>one-hammer-app-v1</module>
         <module>one-hammer-app-common-api</module>
         <module>dag-api</module>
+        <module>dfs-api</module>
     </modules>
 
     <properties>
