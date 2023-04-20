@@ -22,6 +22,7 @@ import javax.persistence.Table;
 @DynamicInsert
 @DynamicUpdate
 public class Ds139Instance extends BaseEntity {
+    private String namespace;
     private String templateId;
     private Long instanceId;
     private Long scheduleId;

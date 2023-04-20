@@ -19,7 +19,7 @@ public interface Ds139Feign {
     class CreateNamespaceResp {
         private Integer code;
         private String msg;
-        private Integer data;
+        private Long data;
     }
 
     @RequestLine("GET /dolphinscheduler/projects/delete")
@@ -30,7 +30,7 @@ public interface Ds139Feign {
     class DeleteNamespaceResp {
         private Integer code;
         private String msg;
-        private Integer data;
+        private Long data;
     }
 
     @RequestLine("POST /dolphinscheduler/projects/import-definition")
@@ -43,7 +43,7 @@ public interface Ds139Feign {
     class ImportDefinitionResp {
         private Integer code;
         private String msg;
-        private List<Integer> data;
+        private List<Long> data;
     }
 
     @RequestLine("POST /dolphinscheduler/projects/{namespace}/process/release")
@@ -68,7 +68,7 @@ public interface Ds139Feign {
     class ConfigDefinitionScheduleResp {
         private Integer code;
         private String msg;
-        private Integer data;
+        private Long data;
     }
 
     @Data

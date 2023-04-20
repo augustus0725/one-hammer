@@ -42,7 +42,7 @@ public class SftpDfsImplTest {
 
         Files.list(Paths.get(".")).forEach(p -> System.out.println(p));
 
-        dfs.write(Paths.get("./pom.xml"), Paths.get(""));
+        dfs.write(Paths.get("./pom.xml"), Paths.get("xxxx"));
     }
 
     @Test

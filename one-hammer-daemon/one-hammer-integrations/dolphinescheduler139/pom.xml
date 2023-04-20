@@ -46,8 +46,21 @@
         <dependency>
             <groupId>com.lueing.oh</groupId>
             <artifactId>one-hammer-model</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lueing.oh</groupId>
+            <artifactId>dfs-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lueing.oh</groupId>
+            <artifactId>one-hammer-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
