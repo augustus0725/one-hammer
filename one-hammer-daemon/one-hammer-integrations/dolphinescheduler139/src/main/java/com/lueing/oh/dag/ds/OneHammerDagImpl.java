@@ -158,7 +158,7 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
-    public String createInstanceFromDagTemplate(String namespace, String templateName, Map<String, String> config)
+    public String createDagInstance(String namespace, String templateName, Map<String, String> config)
             throws OneHammerDagException {
         Path templatePath = null;
         Path updateTemplatePath = null;
@@ -255,7 +255,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public void startInstance(String namespace, String instanceId) throws OneHammerDagException {
+    public void beginSchedule(String namespace, String instanceId) throws OneHammerDagException {
         Optional<Ds139Instance> instance = instanceRepository.findByInstanceId(Long.valueOf(instanceId));
         if (!instance.isPresent()) {
             throw new OneHammerDagException("Instance id " + instanceId + " not found.");
@@ -270,7 +270,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public void stopInstance(String namespace, String instanceId) throws OneHammerDagException {
+    public void stopSchedule(String namespace, String instanceId) throws OneHammerDagException {
         Optional<Ds139Instance> instance = instanceRepository.findByInstanceId(Long.valueOf(instanceId));
         if (!instance.isPresent()) {
             throw new OneHammerDagException("Instance id " + instanceId + " not found.");
@@ -287,7 +287,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
     public void deleteInstance(String namespace, String instanceId) throws OneHammerDagException {
-        stopInstance(namespace, instanceId);
+        stopSchedule(namespace, instanceId);
         // disable the instance
         Ds139Feign.ToggleDefinitionResp toggleResp = ds139Feign.toggleDefinition(Collections.singletonMap(
                 "token",
@@ -303,5 +303,34 @@ public class OneHammerDagImpl implements OneHammerDag {
         ), namespace, Collections.singletonMap("processDefinitionId", instanceId));
         // update database info
         instanceRepository.deleteByNamespaceAndInstanceId(namespace, Long.parseLong(instanceId));
+    }
+
+    @Override
+    public void startDagOnce(String namespace, String instanceId) throws OneHammerDagException {
+        Ds139Feign.ScheduleStatusResp resp = ds139Feign.startOnce(
+                Collections.singletonMap(
+                        "token",
+                        ds139Token
+                ),
+                namespace,
+                Ds139Feign.DolphinSchedulerOnce.builder()
+                        .processDefinitionId(instanceId)
+                        .scheduleTime("")
+                        .failureStrategy("END")
+                        .warningType("NONE")
+                        .warningGroupId("0")
+                        .execType("")
+                        .startNodeList("")
+                        .taskDependType("TASK_POST")
+                        .runMode("RUN_MODE_SERIAL")
+                        .processInstancePriority("MEDIUM")
+                        .receivers("")
+                        .receiversCc("")
+                        .workerGroup("default")
+                        .build()
+        );
+        if (0 != resp.getCode()) {
+            throw new OneHammerDagException(resp.getMsg());
+        }
     }
 }

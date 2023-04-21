@@ -10,9 +10,10 @@ public interface OneHammerDag {
     String loadDagTemplate(String namespace, String templateName, String path, String description) throws OneHammerDagException;
     void deleteDagTemplate(String namespace, String templateName) throws OneHammerDagException;
     List<DagTemplate> templates(String namespace) throws OneHammerDagException;
-    String createInstanceFromDagTemplate(String namespace, String templateName, Map<String, String> config) throws OneHammerDagException;
+    String createDagInstance(String namespace, String templateName, Map<String, String> config) throws OneHammerDagException;
     void updateInstanceSchedule(String namespace, String instanceId, String cron) throws OneHammerDagException;
-    void startInstance(String namespace, String instanceId) throws OneHammerDagException;
-    void stopInstance(String namespace, String instanceId) throws OneHammerDagException;
+    void beginSchedule(String namespace, String instanceId) throws OneHammerDagException;
+    void stopSchedule(String namespace, String instanceId) throws OneHammerDagException;
     void deleteInstance(String namespace, String instanceId) throws OneHammerDagException;
+    void startDagOnce(String namespace, String instanceId) throws OneHammerDagException;
 }
