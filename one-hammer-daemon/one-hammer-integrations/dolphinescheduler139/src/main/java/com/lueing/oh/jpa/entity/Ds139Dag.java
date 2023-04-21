@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "t_ds139_instance")
+@Table(name = "t_ds139_dag")
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -21,9 +21,9 @@ import javax.persistence.Table;
 @ToString
 @DynamicInsert
 @DynamicUpdate
-public class Ds139Instance extends BaseEntity {
+public class Ds139Dag extends BaseEntity {
     private String namespace;
     private String templateId;
-    private Long instanceId;
+    private Long dagId;
     private Long scheduleId;
 }

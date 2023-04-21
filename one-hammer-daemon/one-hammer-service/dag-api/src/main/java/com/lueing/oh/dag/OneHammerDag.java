@@ -10,10 +10,12 @@ public interface OneHammerDag {
     String loadDagTemplate(String namespace, String templateName, String path, String description) throws OneHammerDagException;
     void deleteDagTemplate(String namespace, String templateName) throws OneHammerDagException;
     List<DagTemplate> templates(String namespace) throws OneHammerDagException;
-    String createDagInstance(String namespace, String templateName, Map<String, String> config) throws OneHammerDagException;
-    void updateInstanceSchedule(String namespace, String instanceId, String cron) throws OneHammerDagException;
-    void beginSchedule(String namespace, String instanceId) throws OneHammerDagException;
-    void stopSchedule(String namespace, String instanceId) throws OneHammerDagException;
-    void deleteInstance(String namespace, String instanceId) throws OneHammerDagException;
-    void startDagOnce(String namespace, String instanceId) throws OneHammerDagException;
+    String createDag(String namespace, String templateName, Map<String, String> config) throws OneHammerDagException;
+    void updateDagSchedule(String namespace, String dagId, String cron) throws OneHammerDagException;
+    void beginSchedule(String namespace, String dagId) throws OneHammerDagException;
+    void stopSchedule(String namespace, String dagId) throws OneHammerDagException;
+    void deleteDag(String namespace, String dagId) throws OneHammerDagException;
+    String startDagOnce(String namespace, String dagId) throws OneHammerDagException;
+    DagTasksSnapshot displayDagSnapshot(String namespace, String dagId, String snapshotId) throws OneHammerDagException;
+    List<DagSnapshot> displayDagSnapshots(String namespace, String dagId, long pageNo, long pageSize) throws OneHammerDagException;
 }

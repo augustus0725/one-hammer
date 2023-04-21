@@ -1,13 +1,12 @@
 package com.lueing.oh.dag.ds;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.lueing.oh.commons.os.Os;
-import com.lueing.oh.dag.DagTemplate;
-import com.lueing.oh.dag.OneHammerDag;
-import com.lueing.oh.dag.OneHammerDagException;
+import com.lueing.oh.dag.*;
 import com.lueing.oh.dag.ds.feign.Ds139Feign;
 import com.lueing.oh.dfs.Dfs;
-import com.lueing.oh.jpa.entity.Ds139Instance;
+import com.lueing.oh.jpa.entity.Ds139Dag;
 import com.lueing.oh.jpa.entity.Ds139Namespace;
 import com.lueing.oh.jpa.entity.Ds139Template;
 import com.lueing.oh.jpa.repository.rw.Ds139InstanceRepository;
@@ -158,7 +157,7 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
-    public String createDagInstance(String namespace, String templateName, Map<String, String> config)
+    public String createDag(String namespace, String templateName, Map<String, String> config)
             throws OneHammerDagException {
         Path templatePath = null;
         Path updateTemplatePath = null;
@@ -183,8 +182,8 @@ public class OneHammerDagImpl implements OneHammerDag {
                 throw new OneHammerDagException(toggleResp.getMsg());
             }
             // save to db
-            instanceRepository.save(Ds139Instance.builder()
-                    .instanceId(instanceId).templateId(template).namespace(namespace).scheduleId(-1L).build());
+            instanceRepository.save(Ds139Dag.builder()
+                    .dagId(instanceId).templateId(template).namespace(namespace).scheduleId(-1L).build());
             return String.valueOf(resp.getData().get(0));
         } catch (IOException e) {
             throw new OneHammerDagException(e.getMessage());
@@ -204,10 +203,10 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
-    public void updateInstanceSchedule(String namespace, String instanceId, String cron) throws OneHammerDagException {
-        Optional<Ds139Instance> instance = instanceRepository.findByInstanceId(Long.valueOf(instanceId));
+    public void updateDagSchedule(String namespace, String dagId, String cron) throws OneHammerDagException {
+        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
-            throw new OneHammerDagException("Instance id " + instanceId + " not found.");
+            throw new OneHammerDagException("Instance id " + dagId + " not found.");
         }
         if (instance.get().getScheduleId() > 0) {
             throw new OneHammerDagException("This instance is already config, start it first.");
@@ -238,7 +237,7 @@ public class OneHammerDagImpl implements OneHammerDag {
                 .receivers("")
                 .receiversCc("")
                 .workerGroup("default")
-                .processDefinitionId(instanceId)
+                .processDefinitionId(dagId)
                 .build());
         if (0 != resp.getCode()) {
             throw new OneHammerDagException(resp.getMsg());
@@ -255,10 +254,10 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public void beginSchedule(String namespace, String instanceId) throws OneHammerDagException {
-        Optional<Ds139Instance> instance = instanceRepository.findByInstanceId(Long.valueOf(instanceId));
+    public void beginSchedule(String namespace, String dagId) throws OneHammerDagException {
+        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
-            throw new OneHammerDagException("Instance id " + instanceId + " not found.");
+            throw new OneHammerDagException("Dag id " + dagId + " not found.");
         }
         Ds139Feign.ScheduleStatusResp resp = ds139Feign.enbaleSchedule(Collections.singletonMap(
                 "token",
@@ -270,10 +269,10 @@ public class OneHammerDagImpl implements OneHammerDag {
     }
 
     @Override
-    public void stopSchedule(String namespace, String instanceId) throws OneHammerDagException {
-        Optional<Ds139Instance> instance = instanceRepository.findByInstanceId(Long.valueOf(instanceId));
+    public void stopSchedule(String namespace, String dagId) throws OneHammerDagException {
+        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
-            throw new OneHammerDagException("Instance id " + instanceId + " not found.");
+            throw new OneHammerDagException("Instance id " + dagId + " not found.");
         }
         Ds139Feign.ScheduleStatusResp resp = ds139Feign.disableSchedule(Collections.singletonMap(
                 "token",
@@ -286,13 +285,13 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
-    public void deleteInstance(String namespace, String instanceId) throws OneHammerDagException {
-        stopSchedule(namespace, instanceId);
+    public void deleteDag(String namespace, String dagId) throws OneHammerDagException {
+        stopSchedule(namespace, dagId);
         // disable the instance
         Ds139Feign.ToggleDefinitionResp toggleResp = ds139Feign.toggleDefinition(Collections.singletonMap(
                 "token",
                 ds139Token
-        ), namespace, Long.parseLong(instanceId), 0);
+        ), namespace, Long.parseLong(dagId), 0);
         if (0 != toggleResp.getCode()) {
             throw new OneHammerDagException(toggleResp.getMsg());
         }
@@ -300,13 +299,14 @@ public class OneHammerDagImpl implements OneHammerDag {
         ds139Feign.deleteDefinition(Collections.singletonMap(
                 "token",
                 ds139Token
-        ), namespace, Collections.singletonMap("processDefinitionId", instanceId));
+        ), namespace, Collections.singletonMap("processDefinitionId", dagId));
         // update database info
-        instanceRepository.deleteByNamespaceAndInstanceId(namespace, Long.parseLong(instanceId));
+        instanceRepository.deleteByNamespaceAndInstanceId(namespace, Long.parseLong(dagId));
     }
 
     @Override
-    public void startDagOnce(String namespace, String instanceId) throws OneHammerDagException {
+    public String startDagOnce(String namespace, String dagId) throws OneHammerDagException {
+        // 只启动一次, 启动之后没有快照的id, 这个比较麻烦, 需要反查一下
         Ds139Feign.ScheduleStatusResp resp = ds139Feign.startOnce(
                 Collections.singletonMap(
                         "token",
@@ -314,7 +314,7 @@ public class OneHammerDagImpl implements OneHammerDag {
                 ),
                 namespace,
                 Ds139Feign.DolphinSchedulerOnce.builder()
-                        .processDefinitionId(instanceId)
+                        .processDefinitionId(dagId)
                         .scheduleTime("")
                         .failureStrategy("END")
                         .warningType("NONE")
@@ -332,5 +332,83 @@ public class OneHammerDagImpl implements OneHammerDag {
         if (0 != resp.getCode()) {
             throw new OneHammerDagException(resp.getMsg());
         }
+        // 查下快照id
+        int maxTry = 3;
+
+        while (maxTry-- > 0) {
+            Ds139Feign.ListDagSnapshotsResp listDagSnapshotsResp = ds139Feign.listDagSnapshots(Collections.singletonMap(
+                            "token",
+                            ds139Token
+                    ),
+                    namespace,
+                    ImmutableMap.of(
+                            "processDefinitionId", dagId,
+                            "pageNo", 1,
+                            "pageSize", 1
+                    ));
+            if (0 != listDagSnapshotsResp.getCode()) {
+                throw new OneHammerDagException(listDagSnapshotsResp.getMsg());
+            }
+            if (!listDagSnapshotsResp.getData().getTotalList().isEmpty()) {
+                return String.valueOf(listDagSnapshotsResp.getData().getTotalList().get(0).getId());
+            }
+        }
+        throw new OneHammerDagException("Fail to get snapshot id.");
     }
+
+    @Override
+    public DagTasksSnapshot displayDagSnapshot(String namespace, String dagId, String snapshotId) throws OneHammerDagException {
+        Ds139Feign.ListDagTasksStatusResp resp = ds139Feign.displayDagSnapshotStatus(Collections.singletonMap(
+                        "token",
+                        ds139Token
+                ),
+                namespace,
+                Collections.singletonMap(
+                        "processInstanceId",
+                        snapshotId
+                )
+        );
+        if (0 != resp.getCode()) {
+            throw new OneHammerDagException(resp.getMsg());
+        }
+        return DagTasksSnapshot.builder().dagId(dagId).state(resp.getData().getProcessInstanceState()).taskList(
+                resp.getData().getTaskList().stream().map(d ->
+                        DagTask.builder()
+                                .taskType(d.getTaskType())
+                                .taskSuccess(d.isTaskSuccess())
+                                .state(d.getState())
+                                .submitTime(d.getSubmitTime())
+                                .startTime(d.getStartTime())
+                                .endTime(d.getEndTime())
+                                .name(d.getName())
+                                .build()).collect(Collectors.toList())
+        ).build();
+    }
+
+    @Override
+    public List<DagSnapshot> displayDagSnapshots(String namespace, String dagId, long pageNo, long pageSize) throws OneHammerDagException {
+        Ds139Feign.ListDagSnapshotsResp resp = ds139Feign.listDagSnapshots(Collections.singletonMap(
+                        "token",
+                        ds139Token
+                ),
+                namespace,
+                ImmutableMap.of(
+                        "processDefinitionId", dagId,
+                        "pageNo", pageNo,
+                        "pageSize", pageSize
+                )
+        );
+        return resp.getData().getTotalList().stream().map(
+                d -> DagSnapshot.builder()
+                        .snapshotId(String.valueOf(d.getId()))
+                        .dagId(dagId)
+                        .state(d.getState())
+                        .startTime(d.getStartTime())
+                        .endTime(d.getEndTime())
+                        .name(d.getName())
+                        .duration(d.getDuration())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
 }

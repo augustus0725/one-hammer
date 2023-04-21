@@ -145,4 +145,67 @@ public interface Ds139Feign {
         private String workerGroup;
         private String processDefinitionId;
     }
+
+    @RequestLine("GET /dolphinscheduler/projects/{namespace}/instance/task-list-by-process-id")
+    ListDagTasksStatusResp displayDagSnapshotStatus(@HeaderMap Map<String, String> headers, @Param("namespace") String namespace,
+                                                    @QueryMap Map<String, Object> queryMap);
+
+    @Getter
+    @ToString
+    class ListDagTasksStatusResp {
+        private Integer code;
+        private String msg;
+        private Ds139DagStatus data;
+
+    }
+
+    @Getter
+    @ToString
+    class Ds139DagStatus {
+        private String processInstanceState;
+        private List<Ds139TaskStatus> taskList;
+    }
+
+    @Getter
+    @ToString
+    class Ds139TaskStatus {
+        private String name;
+        private String taskType;
+        private String state;
+        private String submitTime;
+        private String startTime;
+        private String endTime;
+        private boolean taskSuccess;
+    }
+
+    // ?pageSize=256&pageNo=1
+    @RequestLine("GET /dolphinscheduler/projects/{namespace}/instance/list-paging")
+    ListDagSnapshotsResp listDagSnapshots(@HeaderMap Map<String, String> headers, @Param("namespace") String namespace,
+                                              @QueryMap Map<String, Object> queryMap);
+
+    @Getter
+    @ToString
+    class ListDagSnapshotsResp {
+        private Integer code;
+        private String msg;
+        private Ds139DagSnapshotsData data;
+    }
+
+    @Getter
+    @ToString
+    class Ds139DagSnapshotsData {
+        private List<Ds139DagSnapshot> totalList;
+    }
+
+    @Getter
+    @ToString
+    class Ds139DagSnapshot {
+        private Long id;
+        private Long processDefinitionId;
+        private String state;
+        private String startTime;
+        private String endTime;
+        private String name;
+        private String duration;
+    }
 }

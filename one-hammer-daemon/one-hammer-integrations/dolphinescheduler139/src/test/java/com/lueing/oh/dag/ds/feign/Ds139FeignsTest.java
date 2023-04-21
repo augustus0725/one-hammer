@@ -1,5 +1,6 @@
 package com.lueing.oh.dag.ds.feign;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -132,7 +133,7 @@ public class Ds139FeignsTest {
                 ),
                 "feign-demo",
                 Collections.singletonMap("processDefinitionId", 2)
-                );
+        );
         assertEquals(new Integer(0), resp.getCode());
     }
 
@@ -147,7 +148,7 @@ public class Ds139FeignsTest {
                 ),
                 "feign-demo",
                 Ds139Feign.DolphinSchedulerOnce.builder()
-                        .processDefinitionId("2")
+                        .processDefinitionId("4")
                         .scheduleTime("")
                         .failureStrategy("END")
                         .warningType("NONE")
@@ -161,6 +162,41 @@ public class Ds139FeignsTest {
                         .receiversCc("")
                         .workerGroup("default")
                         .build()
+        );
+        assertEquals(new Integer(0), resp.getCode());
+    }
+
+    @Test
+    public void testGetDagStatus() {
+        Ds139Feign ds139Feign = Ds139Feigns.create("http://192.168.0.16:12345");
+
+        Ds139Feign.ListDagTasksStatusResp resp = ds139Feign.displayDagSnapshotStatus(Collections.singletonMap(
+                        "token",
+                        TOKEN
+                ),
+                "feign-demo",
+                Collections.singletonMap(
+                        "processInstanceId",
+                        6
+                )
+        );
+        assertEquals(new Integer(0), resp.getCode());
+    }
+
+    @Test
+    public void testListDagSnapshots() {
+        Ds139Feign ds139Feign = Ds139Feigns.create("http://192.168.0.16:12345");
+
+        Ds139Feign.ListDagSnapshotsResp resp = ds139Feign.listDagSnapshots(Collections.singletonMap(
+                        "token",
+                        TOKEN
+                ),
+                "feign-demo",
+                ImmutableMap.of(
+                        "processDefinitionId", 4,
+                        "pageNo", 1,
+                        "pageSize", 1
+                )
         );
         assertEquals(new Integer(0), resp.getCode());
     }
