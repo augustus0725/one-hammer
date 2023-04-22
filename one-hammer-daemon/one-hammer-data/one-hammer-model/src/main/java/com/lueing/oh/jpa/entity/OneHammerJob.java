@@ -9,9 +9,11 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.yaml.snakeyaml.Yaml;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "t_one_hammer_job", indexes = {@Index(columnList = "catalog")})
@@ -23,18 +25,10 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 public class OneHammerJob extends BaseEntity {
-    @Transient
-    private static final Yaml yamlParser = new Yaml();
-
     @Comment("完整的job描述, 用yaml存储, 常用的信息抽取出来, 作为维度查询, 为了解决yaml大小不可控的问题, " +
             "这里的yaml是路径, 文件可以放在nginx/ftp/minio")
     @Column(length = 8192)
     private String yaml;
-
-    public com.lueing.oh.pojo.OneHammerJob getOneHammerJob() {
-        // TODO 从yaml path获取真正的yaml内容
-        return yamlParser.loadAs(yaml, com.lueing.oh.pojo.OneHammerJob.class);
-    }
 
     /* 查询区域 */
     private String apiVersion;

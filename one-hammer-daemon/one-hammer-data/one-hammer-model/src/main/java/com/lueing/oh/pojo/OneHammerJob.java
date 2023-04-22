@@ -1,5 +1,6 @@
 package com.lueing.oh.pojo;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +13,13 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
+@EqualsAndHashCode
 public class OneHammerJob {
+    public static class ExpectedStatus {
+        public static String RUNNING = "running";
+        public static String STOPPED = "stopped";
+    }
+
     private String apiVersion;
     private String kind;
     private Metadata metadata;
