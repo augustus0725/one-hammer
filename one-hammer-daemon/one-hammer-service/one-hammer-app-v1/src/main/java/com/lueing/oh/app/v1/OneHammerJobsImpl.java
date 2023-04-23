@@ -2,6 +2,7 @@ package com.lueing.oh.app.v1;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.lueing.oh.app.api.OneHammerJobException;
 import com.lueing.oh.app.api.OneHammerJobs;
 import com.lueing.oh.app.api.vo.OneHammerJobStatus;
 import com.lueing.oh.app.api.vo.OneHammerJobVO;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -36,6 +38,8 @@ public class OneHammerJobsImpl implements OneHammerJobs {
     @Override
     public void createOneHammerJob(String yamlJob) {
         OneHammerJob oneHammerJob = yamlParser.loadAs(yamlJob, OneHammerJob.class);
+        Path yamlOrig = null;
+        Path yamlLocalPath = null;
         try {
             // do we should override the hammer
             Optional<com.lueing.oh.jpa.entity.OneHammerJob> hammer
@@ -44,7 +48,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
 
             if (hammer.isPresent()) {
                 // 判断是不是需要覆盖
-                Path yamlOrig = dfs.read(Paths.get(hammer.get().getYaml()));
+                yamlOrig = dfs.read(Paths.get(hammer.get().getYaml()));
                 OneHammerJob origHammer = yamlParser.loadAs(Os.cat(yamlOrig), OneHammerJob.class);
 
                 if (Objects.equals(origHammer, oneHammerJob)) {
@@ -52,22 +56,20 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                             origHammer.getMetadata().getName());
                     return;
                 }
-                // TODO 先做删除hammer, 很多复杂状态的删除, 然后统一到下面的创建工作, 要做到幂等
+                this.stop(oneHammerJob);
                 oneHammerJobRepository.deleteById(hammer.get().getId());
             }
 
-            String remotePath = Joiner.on('/').join(ImmutableList.of(
+            String remotePath = Joiner.on('/').join(
+                    ImmutableList.of(
                     "hammers",
                     oneHammerJob.getMetadata().getNamespace(),
                     oneHammerJob.getMetadata().getName()));
-            if (!hammer.isPresent()) {
-                // save job definition to dfs
-                Path yamlLocalPath = Os.saveToTmpFile(yamlJob);
-
-                dfs.mkdir(Paths.get("hammers", oneHammerJob.getMetadata().getNamespace()));
-                dfs.write(yamlLocalPath, Paths.get(remotePath));
-                // TODO 构建hammer的运行时
-            }
+            // save job definition to dfs
+            yamlLocalPath = Os.saveToTmpFile(yamlJob);
+            dfs.mkdir(Paths.get("hammers", oneHammerJob.getMetadata().getNamespace()));
+            dfs.write(yamlLocalPath, Paths.get(remotePath));
+            this.start(oneHammerJob);
             // 保存hammer到数据库
             oneHammerJobRepository.save(com.lueing.oh.jpa.entity.OneHammerJob.builder()
                     .kind(oneHammerJob.getKind())
@@ -79,8 +81,21 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                     .expectedStatus(OneHammerJob.ExpectedStatus.RUNNING)
                     .yaml(remotePath)
                     .build());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new BusinessException(e.getMessage());
+        } finally {
+            if (yamlOrig != null) {
+                try {
+                    Files.deleteIfExists(yamlOrig);
+                } catch (IOException ignored) {
+                }
+            }
+            if (yamlLocalPath != null) {
+                try {
+                    Files.deleteIfExists(yamlLocalPath);
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 
@@ -90,12 +105,12 @@ public class OneHammerJobsImpl implements OneHammerJobs {
     }
 
     @Override
-    public void start(String hammerId) {
+    public void start(OneHammerJob job) throws OneHammerJobException {
 
     }
 
     @Override
-    public void stop(String hammerId) {
+    public void stop(OneHammerJob job) throws OneHammerJobException {
 
     }
 

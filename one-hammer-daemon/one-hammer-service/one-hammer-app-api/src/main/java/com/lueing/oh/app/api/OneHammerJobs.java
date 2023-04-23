@@ -2,6 +2,7 @@ package com.lueing.oh.app.api;
 
 import com.lueing.oh.app.api.vo.OneHammerJobStatus;
 import com.lueing.oh.app.api.vo.OneHammerJobVO;
+import com.lueing.oh.pojo.OneHammerJob;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ public interface OneHammerJobs {
 
     List<OneHammerJobVO> oneHammerJobs();
 
-    void start(String hammerId);
+    void start(OneHammerJob hammerId) throws OneHammerJobException;
 
-    void stop(String hammerId);
+    void stop(OneHammerJob hammerId) throws OneHammerJobException;
 
     OneHammerJobStatus query(String hammerId);
 }
