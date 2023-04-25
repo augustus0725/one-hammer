@@ -10,5 +10,5 @@ public interface OneHammerDags {
 
     void createIfNotExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
 
-    void deleteIfExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
+    String logs(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
 }

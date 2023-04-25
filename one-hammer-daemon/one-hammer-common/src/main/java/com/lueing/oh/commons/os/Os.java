@@ -9,6 +9,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,19 +29,19 @@ public class Os {
 
 
     public static void shell(CommandLine cmd, ExecuteWatchdog watchdog) throws IOException {
-        execute(cmd, watchdog);
+        execute(cmd, System.out, watchdog);
     }
 
     public static String shellWithResult(CommandLine cmd, ExecuteWatchdog watchdog) throws IOException {
         log.info("execute cmd: {}", cmd.toString());
-        ByteArrayOutputStream stdOut = execute(cmd, watchdog);
+        ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
+        execute(cmd, stdOut, watchdog);
         return stdOut.toString(StandardCharsets.UTF_8.name());
     }
 
-    private static ByteArrayOutputStream execute(CommandLine cmd, ExecuteWatchdog watchdog) throws IOException {
+    private static void execute(CommandLine cmd, OutputStream outputStream, ExecuteWatchdog watchdog) throws IOException {
         DefaultExecutor executor = new DefaultExecutor();
-        ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
-        PumpStreamHandler streamHandler = new PumpStreamHandler(stdOut);
+        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
         executor.setStreamHandler(streamHandler);
 
         if (null != watchdog) {
@@ -53,10 +54,13 @@ public class Os {
             }
             executor.execute(cmd);
         } catch (Exception e) {
-            log.error("Command: {} execute fail: {}", cmd, stdOut.toString(StandardCharsets.UTF_8.name()), e);
+            String message = "";
+            if (outputStream instanceof ByteArrayOutputStream) {
+                message = ((ByteArrayOutputStream)outputStream).toString(StandardCharsets.UTF_8.name());
+            }
+            log.error("Command: {} execute fail: {}", cmd, message, e);
             throw e;
         }
-        return stdOut;
     }
 
     public static void touchWithContent(Path path, String content) throws IOException {

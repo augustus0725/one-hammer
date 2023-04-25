@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class OneHammerDagsImpl implements OneHammerDags {
     private final com.lueing.oh.dag.OneHammerDag oneHammerDag;
+
     @Override
     public void start(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException {
         try {
@@ -32,11 +33,7 @@ public class OneHammerDagsImpl implements OneHammerDags {
     @Override
     public void stop(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException {
         if (!Strings.isNullOrEmpty(dag.getSchedule())) {
-            try {
-                oneHammerDag.stopSchedule(hammerJob.getMetadata().getNamespace(), dag.getDagId());
-            } catch (OneHammerDagException e) {
-                throw new OneHammerException(e);
-            }
+            deleteIfExists(hammerJob, dag);
         }
     }
 
@@ -59,7 +56,11 @@ public class OneHammerDagsImpl implements OneHammerDags {
     }
 
     @Override
-    public void deleteIfExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException {
+    public String logs(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException {
+        return null;
+    }
+
+    private void deleteIfExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException {
         if (!Strings.isNullOrEmpty(dag.getDagId())) {
             try {
                 oneHammerDag.deleteDag(hammerJob.getMetadata().getNamespace(), dag.getDagId());

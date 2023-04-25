@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
     private static final Yaml yamlParser = new Yaml();
 
     @Override
+    @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
     public void createOneHammerJob(String yamlJob) {
         OneHammerJob oneHammerJob = yamlParser.loadAs(yamlJob, OneHammerJob.class);
         Path yamlOrig = null;
@@ -115,8 +117,6 @@ public class OneHammerJobsImpl implements OneHammerJobs {
             oneHammerDags.start(hammerJob, dag);
         }
         for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
-            // create stream task if not exists
-            oneHammerStreams.createIfNotExists(hammerJob, stream);
             oneHammerStreams.start(hammerJob, stream);
         }
     }

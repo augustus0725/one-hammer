@@ -8,7 +8,7 @@ public interface OneHammerStreams {
 
     void stop(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
 
-    void createIfNotExists(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
+    void runOnce(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
 
-    void deleteIfExists(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
+    String logs(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
 }
