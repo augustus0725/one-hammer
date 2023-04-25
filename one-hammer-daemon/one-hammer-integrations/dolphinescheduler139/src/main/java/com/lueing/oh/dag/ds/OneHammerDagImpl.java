@@ -172,19 +172,19 @@ public class OneHammerDagImpl implements OneHammerDag {
             if (0 != resp.getCode() && !resp.getData().isEmpty()) {
                 throw new OneHammerDagException(resp.getMsg());
             }
-            Long instanceId = resp.getData().get(0);
+            Long dagId = resp.getData().get(0);
             // enable the instance
             Ds139Feign.ToggleDefinitionResp toggleResp = ds139Feign.toggleDefinition(Collections.singletonMap(
                     "token",
                     ds139Token
-            ), namespace, instanceId, 1);
+            ), namespace, dagId, 1);
             if (0 != toggleResp.getCode()) {
                 throw new OneHammerDagException(toggleResp.getMsg());
             }
             // save to db
             instanceRepository.save(Ds139Dag.builder()
-                    .dagId(instanceId).templateId(template).namespace(namespace).scheduleId(-1L).build());
-            return String.valueOf(resp.getData().get(0));
+                    .dagId(dagId).templateId(template).namespace(namespace).scheduleId(-1L).build());
+            return String.valueOf(dagId);
         } catch (IOException e) {
             throw new OneHammerDagException(e.getMessage());
         } finally {

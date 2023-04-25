@@ -7,13 +7,13 @@ import com.lueing.oh.pojo.OneHammerJob;
 import java.util.List;
 
 public interface OneHammerJobs {
-    void createOneHammerJob(String yamlJob);
+    void createOneHammerJob(String yamlJob) throws OneHammerException;
 
-    List<OneHammerJobVO> oneHammerJobs();
+    List<OneHammerJobVO> oneHammerJobs() throws OneHammerException;
 
-    void start(OneHammerJob hammerId) throws OneHammerException;
+    void start(OneHammerJob hammerJob) throws OneHammerException;
 
-    void stop(OneHammerJob hammerId) throws OneHammerException;
+    void stop(OneHammerJob hammerJob) throws OneHammerException;
 
-    OneHammerJobStatus query(String hammerId);
+    OneHammerJobStatus query(String hammerId) throws OneHammerException;
 }

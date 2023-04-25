@@ -2,16 +2,18 @@ package com.lueing.oh.app.v1;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.lueing.oh.app.api.OneHammerDags;
 import com.lueing.oh.app.api.OneHammerException;
 import com.lueing.oh.app.api.OneHammerJobs;
+import com.lueing.oh.app.api.OneHammerStreams;
 import com.lueing.oh.app.api.vo.OneHammerJobStatus;
 import com.lueing.oh.app.api.vo.OneHammerJobVO;
 import com.lueing.oh.commons.exception.BusinessException;
 import com.lueing.oh.commons.os.Os;
-import com.lueing.oh.dag.OneHammerDag;
 import com.lueing.oh.dfs.Dfs;
 import com.lueing.oh.jpa.repository.rw.OneHammerJobRepository;
 import com.lueing.oh.pojo.OneHammerJob;
+import com.lueing.oh.pojo.OneHammerStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,8 @@ import java.util.Optional;
 @Slf4j
 public class OneHammerJobsImpl implements OneHammerJobs {
     private final Dfs dfs;
-    private final OneHammerDag oneHammerDag;
+    private final OneHammerDags oneHammerDags;
+    private final OneHammerStreams oneHammerStreams;
     private final OneHammerJobRepository oneHammerJobRepository;
     private static final Yaml yamlParser = new Yaml();
 
@@ -59,17 +62,17 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                 this.stop(oneHammerJob);
                 oneHammerJobRepository.deleteById(hammer.get().getId());
             }
+            this.start(oneHammerJob);
 
             String remotePath = Joiner.on('/').join(
                     ImmutableList.of(
-                    "hammers",
-                    oneHammerJob.getMetadata().getNamespace(),
-                    oneHammerJob.getMetadata().getName()));
+                            "hammers",
+                            oneHammerJob.getMetadata().getNamespace(),
+                            oneHammerJob.getMetadata().getName()));
             // save job definition to dfs
-            yamlLocalPath = Os.saveToTmpFile(yamlJob);
+            yamlLocalPath = Os.saveToTmpFile(yamlParser.dump(oneHammerJob));
             dfs.mkdir(Paths.get("hammers", oneHammerJob.getMetadata().getNamespace()));
             dfs.write(yamlLocalPath, Paths.get(remotePath));
-            this.start(oneHammerJob);
             // 保存hammer到数据库
             oneHammerJobRepository.save(com.lueing.oh.jpa.entity.OneHammerJob.builder()
                     .kind(oneHammerJob.getKind())
@@ -105,13 +108,27 @@ public class OneHammerJobsImpl implements OneHammerJobs {
     }
 
     @Override
-    public void start(OneHammerJob job) throws OneHammerException {
-
+    public void start(OneHammerJob hammerJob) throws OneHammerException {
+        for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
+            // create dag task if not exists
+            oneHammerDags.createIfNotExists(hammerJob, dag);
+            oneHammerDags.start(hammerJob, dag);
+        }
+        for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
+            // create stream task if not exists
+            oneHammerStreams.createIfNotExists(hammerJob, stream);
+            oneHammerStreams.start(hammerJob, stream);
+        }
     }
 
     @Override
-    public void stop(OneHammerJob job) throws OneHammerException {
-
+    public void stop(OneHammerJob hammerJob) throws OneHammerException {
+        for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
+            oneHammerDags.stop(hammerJob, dag);
+        }
+        for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
+            oneHammerStreams.stop(hammerJob, stream);
+        }
     }
 
     @Override

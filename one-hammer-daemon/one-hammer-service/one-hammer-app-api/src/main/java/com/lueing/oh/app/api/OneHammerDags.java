@@ -1,8 +1,14 @@
 package com.lueing.oh.app.api;
 
 import com.lueing.oh.pojo.OneHammerDag;
+import com.lueing.oh.pojo.OneHammerJob;
 
 public interface OneHammerDags {
-    void start(OneHammerDag dag);
-    void stop(OneHammerDag dag);
+    void start(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
+
+    void stop(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
+
+    void createIfNotExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
+
+    void deleteIfExists(OneHammerJob hammerJob, OneHammerDag dag) throws OneHammerException;
 }
