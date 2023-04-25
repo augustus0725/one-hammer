@@ -2,7 +2,7 @@ package com.lueing.oh.app.v1;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.lueing.oh.app.api.OneHammerJobException;
+import com.lueing.oh.app.api.OneHammerException;
 import com.lueing.oh.app.api.OneHammerJobs;
 import com.lueing.oh.app.api.vo.OneHammerJobStatus;
 import com.lueing.oh.app.api.vo.OneHammerJobVO;
@@ -105,12 +105,12 @@ public class OneHammerJobsImpl implements OneHammerJobs {
     }
 
     @Override
-    public void start(OneHammerJob job) throws OneHammerJobException {
+    public void start(OneHammerJob job) throws OneHammerException {
 
     }
 
     @Override
-    public void stop(OneHammerJob job) throws OneHammerJobException {
+    public void stop(OneHammerJob job) throws OneHammerException {
 
     }
 

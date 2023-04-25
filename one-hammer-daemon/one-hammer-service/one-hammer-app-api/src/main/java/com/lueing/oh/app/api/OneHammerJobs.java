@@ -11,9 +11,9 @@ public interface OneHammerJobs {
 
     List<OneHammerJobVO> oneHammerJobs();
 
-    void start(OneHammerJob hammerId) throws OneHammerJobException;
+    void start(OneHammerJob hammerId) throws OneHammerException;
 
-    void stop(OneHammerJob hammerId) throws OneHammerJobException;
+    void stop(OneHammerJob hammerId) throws OneHammerException;
 
     OneHammerJobStatus query(String hammerId);
 }

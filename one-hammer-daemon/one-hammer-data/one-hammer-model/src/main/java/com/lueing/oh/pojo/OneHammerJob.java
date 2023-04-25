@@ -45,9 +45,9 @@ public class OneHammerJob {
     @NoArgsConstructor
     public static class Spec {
         // Scheduled(Timer/Cron) DAG Task
-        private List<OneHammerBatchTask> dags;
+        private List<OneHammerDag> dags;
         // Stream Task (Always running...)
-        private List<OneHammerStreamTask> streams;
+        private List<OneHammerStream> streams;
     }
 
     private Spec spec;

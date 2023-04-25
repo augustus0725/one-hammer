@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-public class OneHammerBatchTask {
+public class OneHammerDag {
     private String template;
     private String dagId;
     private String name;

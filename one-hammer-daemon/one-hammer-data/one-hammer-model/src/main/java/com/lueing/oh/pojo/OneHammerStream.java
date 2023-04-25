@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-public class OneHammerStreamTask {
+public class OneHammerStream {
     private String name;
     private String description;
     private String template;
