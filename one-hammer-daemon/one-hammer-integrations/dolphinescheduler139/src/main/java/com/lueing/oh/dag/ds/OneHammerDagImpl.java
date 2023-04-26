@@ -381,6 +381,7 @@ public class OneHammerDagImpl implements OneHammerDag {
                                 .startTime(d.getStartTime())
                                 .endTime(d.getEndTime())
                                 .name(d.getName())
+                                .id(String.valueOf(d.getId()))
                                 .build()).collect(Collectors.toList())
         ).build();
     }

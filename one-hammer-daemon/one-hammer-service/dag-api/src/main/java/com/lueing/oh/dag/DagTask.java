@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @NoArgsConstructor
 public class DagTask {
+    private String id;
     private String name;
     private String taskType;
     private String state;

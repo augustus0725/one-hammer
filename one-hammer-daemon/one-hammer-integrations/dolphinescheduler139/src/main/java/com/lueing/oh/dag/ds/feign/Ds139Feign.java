@@ -169,6 +169,7 @@ public interface Ds139Feign {
     @Getter
     @ToString
     class Ds139TaskStatus {
+        private Long id;
         private String name;
         private String taskType;
         private String state;
