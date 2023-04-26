@@ -112,13 +112,17 @@ public class OneHammerJobsImpl implements OneHammerJobs {
 
     @Override
     public void start(OneHammerJob hammerJob) throws OneHammerException {
-        for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
-            // create dag task if not exists
-            oneHammerDags.createIfNotExists(hammerJob, dag);
-            oneHammerDags.start(hammerJob, dag);
+        if (null != hammerJob.getSpec().getDags()) {
+            for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
+                // create dag task if not exists
+                oneHammerDags.createIfNotExists(hammerJob, dag);
+                oneHammerDags.start(hammerJob, dag);
+            }
         }
-        for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
-            oneHammerStreams.start(hammerJob, stream);
+        if (null != hammerJob.getSpec().getStreams()) {
+            for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
+                oneHammerStreams.start(hammerJob, stream);
+            }
         }
     }
 

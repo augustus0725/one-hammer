@@ -50,7 +50,7 @@ public class OneHammerDagsImpl implements OneHammerDags {
                 dagId = oneHammerDag.createDag(hammerJob.getMetadata().getNamespace(),
                         dag.getTemplate(), dag.getConfig());
                 // schedule
-                if (Strings.isNullOrEmpty(dag.getSchedule())) {
+                if (!Strings.isNullOrEmpty(dag.getSchedule())) {
                     oneHammerDag.updateDagSchedule(hammerJob.getMetadata().getNamespace(), dagId, dag.getSchedule());
                 }
             } catch (OneHammerDagException e) {

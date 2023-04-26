@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfiguration {
     @Bean
-    public Ds139Feign ds139Feign(@Value("vender.dag.ds139.host") String host) {
+    public Ds139Feign ds139Feign(@Value("${vendor.dag.ds139.host}") String host) {
         return Ds139Feigns.create(host);
     }
 
     @Bean
-    public Dfs dfs(@Value("vender.dfs.sftp.user") String sshUser,
-                   @Value("vender.dfs.sftp.password") String sshPass,
-                   @Value("vender.dfs.sftp.host") String sshHost,
-                   @Value("vender.dfs.sftp.base") String baseDir) {
+    public Dfs dfs(@Value("${vendor.dfs.sftp.user}") String sshUser,
+                   @Value("${vendor.dfs.sftp.password}") String sshPass,
+                   @Value("${vendor.dfs.sftp.host}") String sshHost,
+                   @Value("${vendor.dfs.sftp.base}") String baseDir) {
         return new SftpDfsImpl(sshUser, sshPass, sshHost, baseDir);
     }
 }

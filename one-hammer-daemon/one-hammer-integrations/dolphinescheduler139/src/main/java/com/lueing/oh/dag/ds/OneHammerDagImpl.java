@@ -250,6 +250,9 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     private Path updateTemplateParams(Path templatePath, Map<String, String> config) throws IOException {
         String content = Os.cat(templatePath);
+        if (null == config || config.isEmpty()) {
+            return templatePath;
+        }
         // do escape
         config.forEach((key, value) -> config.put(key, Ds139Escape.escape(value)));
         StringSubstitutor substitutor = new StringSubstitutor(config);

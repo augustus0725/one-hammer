@@ -7,9 +7,8 @@ server:
 vendor:
   dag:
     ds139:
-      token: "c533570713bc76a546673aedee5d6c07"
+      token: "e3e64e56dca9e3856514778c7ae8d976"
       host: "http://192.168.0.16:12345"
-
   dfs:
     sftp:
       user: "vagrant"
@@ -26,10 +25,12 @@ spring:
   datasource:
     # 读写
     db0:
+# postgresql
 #      jdbcUrl: jdbc:postgresql://192.168.0.xxx:5432/demo
 #      username: pgadmin
 #      password: xxxxxxx
 #      driverClassName: org.postgresql.Driver
+# h2
       jdbcUrl: jdbc:h2:mem:testdb
       username: sa
       password:
@@ -42,10 +43,6 @@ spring:
       autoCommit: true
     # 只读
     db1:
-#      jdbcUrl: jdbc:postgresql://192.168.0.xxx:5432/demo
-#      username: pgadmin
-#      password: xxxxxxx
-#      driverClassName: org.postgresql.Driver
       jdbcUrl: jdbc:h2:mem:testdb
       username: sa
       password:
@@ -67,7 +64,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           # 不然会报错, 提示jdbc驱动有些api没有实现
           use_jdbc_metadata_defaults: false
