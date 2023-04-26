@@ -7,7 +7,7 @@ import com.lueing.oh.pojo.OneHammerJob;
 import java.util.List;
 
 public interface OneHammerJobs {
-    void createOneHammerJob(String yamlJob) throws OneHammerException;
+    String createOneHammerJob(String yamlJob) throws OneHammerException;
 
     List<OneHammerJobVO> oneHammerJobs() throws OneHammerException;
 

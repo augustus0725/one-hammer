@@ -41,7 +41,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
 
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
-    public void createOneHammerJob(String yamlJob) {
+    public String createOneHammerJob(String yamlJob) {
         OneHammerJob oneHammerJob = yamlParser.loadAs(yamlJob, OneHammerJob.class);
         Path yamlOrig = null;
         Path yamlLocalPath = null;
@@ -59,7 +59,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                 if (Objects.equals(origHammer, oneHammerJob)) {
                     log.warn("This job: {} already exist and no changes in the yaml.",
                             origHammer.getMetadata().getName());
-                    return;
+                    return hammer.get().getId();
                 }
                 this.stop(oneHammerJob);
                 oneHammerJobRepository.deleteById(hammer.get().getId());
@@ -76,7 +76,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
             dfs.mkdir(Paths.get("hammers", oneHammerJob.getMetadata().getNamespace()));
             dfs.write(yamlLocalPath, Paths.get(remotePath));
             // 保存hammer到数据库
-            oneHammerJobRepository.save(com.lueing.oh.jpa.entity.OneHammerJob.builder()
+            com.lueing.oh.jpa.entity.OneHammerJob savedJob = oneHammerJobRepository.save(com.lueing.oh.jpa.entity.OneHammerJob.builder()
                     .kind(oneHammerJob.getKind())
                     .apiVersion(oneHammerJob.getApiVersion())
                     .description(oneHammerJob.getMetadata().getDescription())
@@ -86,6 +86,7 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                     .expectedStatus(OneHammerJob.ExpectedStatus.RUNNING)
                     .yaml(remotePath)
                     .build());
+            return savedJob.getId();
         } catch (Exception e) {
             throw new BusinessException(e.getMessage());
         } finally {
