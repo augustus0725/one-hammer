@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.lueing.oh.commons.os.Os;
 import com.lueing.oh.dag.*;
 import com.lueing.oh.dag.ds.feign.Ds139Feign;
+import com.lueing.oh.dag.ds.util.Ds139Escape;
 import com.lueing.oh.dfs.Dfs;
 import com.lueing.oh.jpa.entity.Ds139Dag;
 import com.lueing.oh.jpa.entity.Ds139Namespace;
@@ -249,6 +250,8 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     private Path updateTemplateParams(Path templatePath, Map<String, String> config) throws IOException {
         String content = Os.cat(templatePath);
+        // do escape
+        config.forEach((key, value) -> config.put(key, Ds139Escape.escape(value)));
         StringSubstitutor substitutor = new StringSubstitutor(config);
         return Os.saveToTmpFile(substitutor.replace(content));
     }

@@ -27,7 +27,12 @@ public class PodCmd {
     }
 
     public static String createLogsPodCmdFrom(String namespace, OneHammerStream stream) {
-        return null;
+        Map<String, String> dataBind = Maps.newHashMap();
+        StringSubstitutor substitutor = new StringSubstitutor(dataBind);
+
+        dataBind.put("podName", stream.getName());
+        dataBind.put("namespace", namespace);
+        return substitutor.replace(POD_LOGS);
     }
 
     public static class RestartPolicy {
@@ -37,12 +42,7 @@ public class PodCmd {
     }
 
     public static String createStartPodCmdFrom(String namespace, OneHammerStream stream) {
-        Map<String, String> dataBind = Maps.newHashMap();
-        StringSubstitutor substitutor = new StringSubstitutor(dataBind);
-
-        dataBind.put("podName", stream.getName());
-        dataBind.put("namespace", namespace);
-        return substitutor.replace(POD_LOGS);
+        return create(namespace, stream, false);
     }
 
     private static String create(String namespace, OneHammerStream stream, boolean runOnce) {
