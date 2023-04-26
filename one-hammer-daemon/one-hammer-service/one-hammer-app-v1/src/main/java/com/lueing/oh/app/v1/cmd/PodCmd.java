@@ -12,8 +12,9 @@ public class PodCmd {
     private final static String POD_RUN = "kubectl run ${podName} -n ${namespace} --env=\"${env}\" --rm --restart=${restartPolicy} --generator=run-pod/v1 --requests ='cpu=${cpu},memory=${memory}' --image=${image} --command -- ${command}";
     private final static String POD_DELETE = "kubectl delete ${podName} -n ${namespace}";
     private final static String POD_LOGS = "kubectl logs ${podName} -n ${namespace}";
+    private final static String POD_STATUS = "kubectl get pod ${podName} -n ${namespace}";
 
-    public static String createStopPodCmdFrom(String namespace, OneHammerStream stream) {
+    public static String createStopCmdFrom(String namespace, OneHammerStream stream) {
         Map<String, String> dataBind = Maps.newHashMap();
         StringSubstitutor substitutor = new StringSubstitutor(dataBind);
 
@@ -22,11 +23,11 @@ public class PodCmd {
         return substitutor.replace(POD_DELETE);
     }
 
-    public static String createRunPodOnceCmdFrom(String namespace, OneHammerStream stream) {
+    public static String createRunOnceCmdFrom(String namespace, OneHammerStream stream) {
         return create(namespace, stream, true);
     }
 
-    public static String createLogsPodCmdFrom(String namespace, OneHammerStream stream) {
+    public static String createLogsCmdFrom(String namespace, OneHammerStream stream) {
         Map<String, String> dataBind = Maps.newHashMap();
         StringSubstitutor substitutor = new StringSubstitutor(dataBind);
 
@@ -35,13 +36,22 @@ public class PodCmd {
         return substitutor.replace(POD_LOGS);
     }
 
+    public static String createStatusCmdFrom(String namespace, OneHammerStream stream) {
+        Map<String, String> dataBind = Maps.newHashMap();
+        StringSubstitutor substitutor = new StringSubstitutor(dataBind);
+
+        dataBind.put("podName", stream.getName());
+        dataBind.put("namespace", namespace);
+        return substitutor.replace(POD_STATUS);
+    }
+
     public static class RestartPolicy {
         public static String ALWAYS = "Always";
         public static String ON_FAILURE = "OnFailure";
         public static String NEVER = "Never";
     }
 
-    public static String createStartPodCmdFrom(String namespace, OneHammerStream stream) {
+    public static String createStartCmdFrom(String namespace, OneHammerStream stream) {
         return create(namespace, stream, false);
     }
 

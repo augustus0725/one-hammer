@@ -11,4 +11,6 @@ public interface OneHammerStreams {
     void runOnce(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
 
     String logs(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
+
+    String status(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException;
 }

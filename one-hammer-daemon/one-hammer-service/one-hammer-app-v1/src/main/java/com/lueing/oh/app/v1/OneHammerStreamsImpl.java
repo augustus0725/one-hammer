@@ -21,7 +21,7 @@ public class OneHammerStreamsImpl implements OneHammerStreams {
     @Override
     public void start(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException {
         try {
-            Os.shell(CommandLine.parse(PodCmd.createStartPodCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
+            Os.shell(CommandLine.parse(PodCmd.createStartCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
         } catch (IOException e) {
             throw new OneHammerException(e);
         }
@@ -30,7 +30,7 @@ public class OneHammerStreamsImpl implements OneHammerStreams {
     @Override
     public void stop(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException {
         try {
-            Os.shell(CommandLine.parse(PodCmd.createStopPodCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
+            Os.shell(CommandLine.parse(PodCmd.createStopCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
         } catch (IOException e) {
             throw new OneHammerException(e);
         }
@@ -39,7 +39,7 @@ public class OneHammerStreamsImpl implements OneHammerStreams {
     @Override
     public void runOnce(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException {
         try {
-            Os.shell(CommandLine.parse(PodCmd.createRunPodOnceCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
+            Os.shell(CommandLine.parse(PodCmd.createRunOnceCmdFrom(hammerJob.getMetadata().getName(), stream)), null);
         } catch (IOException e) {
             throw new OneHammerException(e);
         }
@@ -49,10 +49,21 @@ public class OneHammerStreamsImpl implements OneHammerStreams {
     public String logs(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException {
         String log;
         try {
-            log = Os.shellWithResult(CommandLine.parse(PodCmd.createLogsPodCmdFrom(hammerJob.getMetadata().getNamespace(), stream)), null);
+            log = Os.shellWithResult(CommandLine.parse(PodCmd.createLogsCmdFrom(hammerJob.getMetadata().getNamespace(), stream)), null);
         } catch (IOException e) {
             throw new OneHammerException(e);
         }
         return log;
+    }
+
+    @Override
+    public String status(OneHammerJob hammerJob, OneHammerStream stream) throws OneHammerException {
+        String status;
+        try {
+            status = Os.shellWithResult(CommandLine.parse(PodCmd.createStatusCmdFrom(hammerJob.getMetadata().getNamespace(), stream)), null);
+        } catch (IOException e) {
+            throw new OneHammerException(e);
+        }
+        return status;
     }
 }
