@@ -26,8 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor__ = {@Autowired})
@@ -52,16 +52,9 @@ public class OneHammerJobsImpl implements OneHammerJobs {
                     oneHammerJob.getMetadata().getName());
 
             if (hammer.isPresent()) {
-                // 判断是不是需要覆盖
                 yamlOrig = dfs.read(Paths.get(hammer.get().getYaml()));
                 OneHammerJob origHammer = yamlParser.loadAs(Os.cat(yamlOrig), OneHammerJob.class);
-
-                if (Objects.equals(origHammer, oneHammerJob)) {
-                    log.warn("This job: {} already exist and no changes in the yaml.",
-                            origHammer.getMetadata().getName());
-                    return hammer.get().getId();
-                }
-                this.stop(oneHammerJob);
+                this.stop(origHammer);
                 oneHammerJobRepository.deleteById(hammer.get().getId());
             }
             this.start(oneHammerJob);
@@ -107,7 +100,20 @@ public class OneHammerJobsImpl implements OneHammerJobs {
 
     @Override
     public List<OneHammerJobVO> oneHammerJobs() {
-        return null;
+        return oneHammerJobRepository.findAll().stream().map(v -> OneHammerJobVO
+                .builder()
+                .apiVersion(v.getApiVersion())
+                .expectedStatus(v.getExpectedStatus())
+                .kind(v.getKind())
+                .createdDate(v.getCreatedDate())
+                .description(v.getDescription())
+                .lastModifiedDate(v.getLastModifiedDate())
+                .name(v.getName())
+                .namespace(v.getNamespace())
+                .catalog(v.getCatalog())
+                .id(v.getId())
+                .build()
+        ).collect(Collectors.toList());
     }
 
     @Override
@@ -128,11 +134,16 @@ public class OneHammerJobsImpl implements OneHammerJobs {
 
     @Override
     public void stop(OneHammerJob hammerJob) throws OneHammerException {
-        for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
-            oneHammerDags.stop(hammerJob, dag);
+        if (null != hammerJob.getSpec().getDags()) {
+            for (com.lueing.oh.pojo.OneHammerDag dag : hammerJob.getSpec().getDags()) {
+                oneHammerDags.stop(hammerJob, dag);
+                dag.setDagId(null);
+            }
         }
-        for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
-            oneHammerStreams.stop(hammerJob, stream);
+        if (hammerJob.getSpec().getStreams() != null) {
+            for (OneHammerStream stream : hammerJob.getSpec().getStreams()) {
+                oneHammerStreams.stop(hammerJob, stream);
+            }
         }
     }
 

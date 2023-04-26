@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Hammer
+metadata:
+  name: first-hammer
+  namespace: dev
+  description: 这个是第一个锤子
+spec:
+  dags:
+    - name: dag1
+      template: "dag01"
+      schedule: "0 0 * * * ? *"
