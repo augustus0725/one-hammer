@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/5/30 17:06
  */
 @SpringBootApplication
-public class HelloApp {
+public class HammerApp {
     public static void main(String[] args) {
-        SpringApplication.run(HelloApp.class, args);
+        SpringApplication.run(HammerApp.class, args);
     }
 }

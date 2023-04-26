@@ -3,6 +3,20 @@ server:
   servlet:
     context-path: /
   address: 0.0.0.0
+
+vendor:
+  dag:
+    ds139:
+      token: "c533570713bc76a546673aedee5d6c07"
+      host: "http://192.168.0.16:12345"
+
+  dfs:
+    sftp:
+      user: "vagrant"
+      password: "vagrant"
+      host: "192.168.0.16"
+      base: "/home/vagrant"
+
 spring:
   servlet:
     multipart:

@@ -70,6 +70,19 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
+
+        <!-- Integrations -->
+        <dependency>
+            <groupId>com.lueing.oh</groupId>
+            <artifactId>dolphinescheduler139</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lueing.oh</groupId>
+            <artifactId>sftp-dfs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
