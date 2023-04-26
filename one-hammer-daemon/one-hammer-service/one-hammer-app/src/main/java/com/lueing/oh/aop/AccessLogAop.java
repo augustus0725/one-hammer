@@ -1,4 +1,4 @@
-package com.lueing.oh.app.aop;
+package com.lueing.oh.aop;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

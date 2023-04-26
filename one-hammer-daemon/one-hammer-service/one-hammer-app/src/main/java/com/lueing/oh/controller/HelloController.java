@@ -1,4 +1,4 @@
-package com.lueing.oh.app.controller;
+package com.lueing.oh.controller;
 
 import lombok.RequiredArgsConstructor;
 import com.lueing.oh.app.api.Hello;

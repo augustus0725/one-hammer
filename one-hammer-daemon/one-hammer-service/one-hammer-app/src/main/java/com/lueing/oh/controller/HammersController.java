@@ -1,4 +1,4 @@
-package com.lueing.oh.app.controller;
+package com.lueing.oh.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;

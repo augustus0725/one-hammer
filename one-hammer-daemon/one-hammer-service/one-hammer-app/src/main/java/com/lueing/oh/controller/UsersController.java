@@ -1,4 +1,4 @@
-package com.lueing.oh.app.controller;
+package com.lueing.oh.controller;
 
 import com.lueing.oh.app.api.Users;
 import com.lueing.oh.app.api.vo.i.UserVO;

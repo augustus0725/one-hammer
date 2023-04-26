@@ -1,4 +1,4 @@
-package com.lueing.oh.app.config;
+package com.lueing.oh.config;
 
 import com.lueing.oh.dag.ds.feign.Ds139Feign;
 import com.lueing.oh.dag.ds.feign.Ds139Feigns;

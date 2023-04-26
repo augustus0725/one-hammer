@@ -1,4 +1,4 @@
-package com.lueing.oh.app;
+package com.lueing.oh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
