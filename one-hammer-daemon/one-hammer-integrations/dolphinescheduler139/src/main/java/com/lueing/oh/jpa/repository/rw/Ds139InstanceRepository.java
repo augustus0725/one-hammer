@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface Ds139InstanceRepository extends JpaRepository<Ds139Dag, String> {
-    Optional<Ds139Dag> findByInstanceId(Long instanceId);
+    Optional<Ds139Dag> findByDagId(Long dagId);
 
-    void deleteByNamespaceAndInstanceId(String namespace, long parseLong);
+    void deleteByNamespaceAndDagId(String namespace, long dagId);
 }

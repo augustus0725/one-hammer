@@ -205,7 +205,7 @@ public class OneHammerDagImpl implements OneHammerDag {
     @Override
     @Transactional(rollbackFor = Exception.class, value = "rwTransactionManager")
     public void updateDagSchedule(String namespace, String dagId, String cron) throws OneHammerDagException {
-        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
+        Optional<Ds139Dag> instance = instanceRepository.findByDagId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
             throw new OneHammerDagException("Instance id " + dagId + " not found.");
         }
@@ -258,7 +258,7 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     public void beginSchedule(String namespace, String dagId) throws OneHammerDagException {
-        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
+        Optional<Ds139Dag> instance = instanceRepository.findByDagId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
             throw new OneHammerDagException("Dag id " + dagId + " not found.");
         }
@@ -273,7 +273,7 @@ public class OneHammerDagImpl implements OneHammerDag {
 
     @Override
     public void stopSchedule(String namespace, String dagId) throws OneHammerDagException {
-        Optional<Ds139Dag> instance = instanceRepository.findByInstanceId(Long.valueOf(dagId));
+        Optional<Ds139Dag> instance = instanceRepository.findByDagId(Long.valueOf(dagId));
         if (!instance.isPresent()) {
             throw new OneHammerDagException("Instance id " + dagId + " not found.");
         }
@@ -304,7 +304,7 @@ public class OneHammerDagImpl implements OneHammerDag {
                 ds139Token
         ), namespace, Collections.singletonMap("processDefinitionId", dagId));
         // update database info
-        instanceRepository.deleteByNamespaceAndInstanceId(namespace, Long.parseLong(dagId));
+        instanceRepository.deleteByNamespaceAndDagId(namespace, Long.parseLong(dagId));
     }
 
     @Override
