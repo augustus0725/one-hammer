@@ -84,4 +84,21 @@ public class SftpDfsImpl implements Dfs {
         ), null);
         return Paths.get(path.toString(), remote.getFileName().toString());
     }
+
+    @Override
+    public Path copy(Path remote, Path local) throws IOException {
+        Os.shell(CommandLine.parse(
+                createScpCopy(remote.toString(), local.toString())
+        ), null);
+        return null;
+    }
+
+    private String createScpCopy(String remote, String local) {
+        return String.format("sshpass -p '%s' scp -r -o StrictHostKeyChecking=no %s@%s:%s %s",
+                sshPass,
+                sshUser,
+                sshHost,
+                Paths.get(baseDir, remote),
+                local);
+    }
 }
