@@ -19,9 +19,12 @@ public class DynamicJdbcClassLoader extends URLClassLoader {
         File dir = new File(path);
 
         if (dir.exists() && dir.isDirectory()) {
-            for (File file : dir.listFiles()) {
-                if (file.isFile() && file.getName().endsWith(".jar")) {
-                    this.addURL(file);
+            File[] subDirs = dir.listFiles();
+            if (null != subDirs) {
+                for (File file : subDirs) {
+                    if (file.isFile() && file.getName().endsWith(".jar")) {
+                        this.addURL(file);
+                    }
                 }
             }
         }
