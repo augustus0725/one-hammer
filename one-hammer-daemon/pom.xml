@@ -13,6 +13,7 @@
         <module>one-hammer-service</module>
         <module>one-hammer-common</module>
         <module>one-hammer-integrations</module>
+        <module>one-hammer-plugins</module>
     </modules>
 
     <properties>
