@@ -3,10 +3,13 @@ package com.lueing.oh.meta.jdbc;
 import com.lueing.oh.meta.api.Connector;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 public class JdbcProxyTest {
@@ -36,6 +39,17 @@ public class JdbcProxyTest {
             System.out.println(rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" + rs.getString(4) + "\t" + rs.getString(5));
         }
         connection.close();
+    }
+
+    @Test
+    public void testYaml() {
+        String yaml = "jdbcUrl: \"jdbc:postgresql://192.168.0.xx:xx/xxxdb\"\n" +
+                "username: pgadmin\n" +
+                "password: xxxxxx\n" +
+                "driverClassName: org.postgresql.Driver";
+
+        Connector connector = new Yaml().loadAs(yaml, Connector.class);
+        assertEquals("jdbc:postgresql://192.168.0.xx:xx/xxxdb", connector.getJdbcUrl());
     }
 
 }

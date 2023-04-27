@@ -1,10 +1,13 @@
 package com.lueing.oh.meta.api;
 
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @SuperBuilder
+@EqualsAndHashCode
 public class Connector {
     private String jdbcUrl;
     private String username;
