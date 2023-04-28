@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>one-hammer-plugins</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>kafka2jdbc</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
