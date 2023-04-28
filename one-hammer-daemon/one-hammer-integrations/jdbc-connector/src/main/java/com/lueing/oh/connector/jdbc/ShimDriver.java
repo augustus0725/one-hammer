@@ -1,4 +1,4 @@
-package com.lueing.oh.commons.connectors.jdbc;
+package com.lueing.oh.connector.jdbc;
 
 import java.sql.*;
 import java.util.Properties;

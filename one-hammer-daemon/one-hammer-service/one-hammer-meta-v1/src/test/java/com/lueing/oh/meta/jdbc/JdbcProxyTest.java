@@ -1,7 +1,7 @@
 package com.lueing.oh.meta.jdbc;
 
-import com.lueing.oh.commons.connectors.jdbc.Connector;
-import com.lueing.oh.commons.connectors.jdbc.JdbcProxy;
+import com.lueing.oh.connector.jdbc.Connector;
+import com.lueing.oh.connector.jdbc.JdbcConnector;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class JdbcProxyTest {
     @Test
     public void testConnection() throws Exception {
-        JdbcProxy jdbcProxy = new JdbcProxy();
+        JdbcConnector jdbcProxy = new JdbcConnector();
 
         Connection connection = jdbcProxy.getConnection("sources/libs", Connector.builder()
                 .jdbcUrl("jdbc:postgresql://192.168.0.*:5432/**_db")

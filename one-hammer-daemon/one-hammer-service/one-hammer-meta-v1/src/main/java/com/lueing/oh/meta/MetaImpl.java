@@ -1,9 +1,9 @@
 package com.lueing.oh.meta;
 
 import com.google.common.collect.Maps;
-import com.lueing.oh.commons.connectors.jdbc.Connector;
-import com.lueing.oh.commons.connectors.jdbc.JdbcProxy;
 import com.lueing.oh.commons.os.Os;
+import com.lueing.oh.connector.jdbc.Connector;
+import com.lueing.oh.connector.jdbc.JdbcConnector;
 import com.lueing.oh.dfs.Dfs;
 import com.lueing.oh.meta.api.HammerMetaException;
 import com.lueing.oh.meta.api.Meta;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class MetaImpl implements Meta {
     private static final Yaml yamlParser = new Yaml();
     private final Dfs dfs;
-    private final JdbcProxy jdbcProxy;
+    private final JdbcConnector jdbcProxy;
     private final Map<String, Map<String, Integer>> cache = Maps.newHashMap();
     @Override
     public synchronized Map<String, Integer> meta(String identify, String table) throws HammerMetaException {

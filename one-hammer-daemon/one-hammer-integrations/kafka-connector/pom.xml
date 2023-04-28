@@ -5,18 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lueing.oh</groupId>
-        <artifactId>one-hammer</artifactId>
+        <artifactId>one-hammer-integrations</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>one-hammer-integrations</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>dolphinescheduler139</module>
-        <module>sshpass-dfs</module>
-        <module>kafka-connector</module>
-        <module>jdbc-connector</module>
-    </modules>
+    <artifactId>kafka-connector</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

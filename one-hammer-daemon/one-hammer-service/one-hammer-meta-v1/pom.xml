@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>com.lueing.oh</groupId>
-            <artifactId>one-hammer-common</artifactId>
+            <artifactId>jdbc-connector</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

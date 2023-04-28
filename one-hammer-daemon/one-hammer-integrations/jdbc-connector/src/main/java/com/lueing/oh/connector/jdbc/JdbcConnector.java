@@ -1,4 +1,4 @@
-package com.lueing.oh.commons.connectors.jdbc;
+package com.lueing.oh.connector.jdbc;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JdbcProxy {
+public class JdbcConnector {
     private final Map<String, Driver> nameDriver = new HashMap<>();
 
     public Connection getConnection(String libs, Connector connector) throws Exception {
