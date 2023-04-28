@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.lueing.oh</groupId>
-            <artifactId>sftp-dfs</artifactId>
+            <artifactId>sshpass-dfs</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -38,6 +38,11 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lueing.oh</groupId>
+            <artifactId>one-hammer-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

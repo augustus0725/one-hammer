@@ -1,4 +1,4 @@
-package com.lueing.oh.dfs.sftp;
+package com.lueing.oh.dfs.sshpass;
 
 import com.lueing.oh.dfs.Dfs;
 import org.junit.Ignore;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @Ignore
-public class SftpDfsImplTest {
+public class SshpassDfsImplTest {
     @Test
     public void testPaths() {
         assertEquals(File.separator + "root" + File.separator + "sabo"
@@ -23,14 +23,14 @@ public class SftpDfsImplTest {
 
     @Test
     public void testMkdir() throws IOException {
-        Dfs dfs = new SftpDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
+        Dfs dfs = new SshpassDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
 
         dfs.mkdir(Paths.get("a/b"));
     }
 
     @Test
     public void testRm() throws IOException {
-        Dfs dfs = new SftpDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
+        Dfs dfs = new SshpassDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
 
         dfs.rm(Paths.get("a/b"));
         dfs.rm(Paths.get("a"));
@@ -38,7 +38,7 @@ public class SftpDfsImplTest {
 
     @Test
     public void testWrite() throws IOException {
-        Dfs dfs = new SftpDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
+        Dfs dfs = new SshpassDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
 
         Files.list(Paths.get(".")).forEach(p -> System.out.println(p));
 
@@ -47,7 +47,7 @@ public class SftpDfsImplTest {
 
     @Test
     public void testRead() throws IOException {
-        Dfs dfs = new SftpDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
+        Dfs dfs = new SshpassDfsImpl("vagrant", "vagrant", "192.168.0.16", "/home/vagrant");
 
         Path remotePath = dfs.read(Paths.get("./pom.xml"));
         assertTrue(remotePath.toFile().exists());

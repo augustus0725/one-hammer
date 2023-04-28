@@ -1,6 +1,9 @@
-package com.lueing.oh.meta.api;
+package com.lueing.oh.commons.jdbc;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter

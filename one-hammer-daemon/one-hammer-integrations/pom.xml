@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>dolphinescheduler139</module>
-        <module>sftp-dfs</module>
+        <module>sshpass-dfs</module>
     </modules>
 
     <properties>

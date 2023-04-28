@@ -1,12 +1,12 @@
 package com.lueing.oh.meta;
 
 import com.google.common.collect.Maps;
+import com.lueing.oh.commons.jdbc.Connector;
+import com.lueing.oh.commons.jdbc.JdbcProxy;
 import com.lueing.oh.commons.os.Os;
 import com.lueing.oh.dfs.Dfs;
-import com.lueing.oh.meta.api.Connector;
 import com.lueing.oh.meta.api.HammerMetaException;
 import com.lueing.oh.meta.api.Meta;
-import com.lueing.oh.meta.jdbc.JdbcProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

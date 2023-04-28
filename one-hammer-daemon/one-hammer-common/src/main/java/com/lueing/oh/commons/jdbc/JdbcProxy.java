@@ -1,7 +1,4 @@
-package com.lueing.oh.meta.jdbc;
-
-import com.lueing.oh.meta.api.Connector;
-import org.springframework.stereotype.Component;
+package com.lueing.oh.commons.jdbc;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -9,7 +6,6 @@ import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class JdbcProxy {
     private final Map<String, Driver> nameDriver = new HashMap<>();
 

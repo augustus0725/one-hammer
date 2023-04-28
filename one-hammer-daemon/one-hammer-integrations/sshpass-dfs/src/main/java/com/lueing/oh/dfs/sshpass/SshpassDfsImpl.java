@@ -1,4 +1,4 @@
-package com.lueing.oh.dfs.sftp;
+package com.lueing.oh.dfs.sshpass;
 
 import com.google.common.base.Strings;
 import com.lueing.oh.commons.os.Os;
@@ -10,13 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class SftpDfsImpl implements Dfs {
+public class SshpassDfsImpl implements Dfs {
     private final String sshUser;
     private final String sshPass;
     private final String sshHost;
     private final String baseDir;
 
-    public SftpDfsImpl(String sshUser, String sshPass, String sshHost, String baseDir) {
+    public SshpassDfsImpl(String sshUser, String sshPass, String sshHost, String baseDir) {
         this.sshUser = sshUser;
         this.sshPass = sshPass;
         this.sshHost = sshHost;
@@ -25,7 +25,7 @@ public class SftpDfsImpl implements Dfs {
         if (Strings.isNullOrEmpty(sshUser) || Strings.isNullOrEmpty(sshPass) || "root".equals(sshUser)) {
             String message = "root".equals(sshUser) ? "The user should not be root"
                     : "sshUser & sshPass should not be empty or null";
-            throw new SftpDfsException(message);
+            throw new SshpassDfsException(message);
         }
     }
 

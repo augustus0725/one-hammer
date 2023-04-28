@@ -1,4 +1,4 @@
-package com.lueing.oh.meta.jdbc;
+package com.lueing.oh.commons.jdbc;
 
 import java.io.File;
 import java.io.IOException;

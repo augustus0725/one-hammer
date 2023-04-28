@@ -80,7 +80,7 @@
 
         <dependency>
             <groupId>com.lueing.oh</groupId>
-            <artifactId>sftp-dfs</artifactId>
+            <artifactId>sshpass-dfs</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
