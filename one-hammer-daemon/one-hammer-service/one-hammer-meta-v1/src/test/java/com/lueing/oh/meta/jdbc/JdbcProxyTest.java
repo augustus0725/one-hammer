@@ -1,7 +1,7 @@
 package com.lueing.oh.meta.jdbc;
 
-import com.lueing.oh.commons.jdbc.Connector;
-import com.lueing.oh.commons.jdbc.JdbcProxy;
+import com.lueing.oh.commons.connectors.jdbc.Connector;
+import com.lueing.oh.commons.connectors.jdbc.JdbcProxy;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;

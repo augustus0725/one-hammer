@@ -1,8 +1,8 @@
 package com.lueing.oh.meta;
 
 import com.google.common.collect.Maps;
-import com.lueing.oh.commons.jdbc.Connector;
-import com.lueing.oh.commons.jdbc.JdbcProxy;
+import com.lueing.oh.commons.connectors.jdbc.Connector;
+import com.lueing.oh.commons.connectors.jdbc.JdbcProxy;
 import com.lueing.oh.commons.os.Os;
 import com.lueing.oh.dfs.Dfs;
 import com.lueing.oh.meta.api.HammerMetaException;

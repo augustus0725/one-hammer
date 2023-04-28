@@ -1,6 +1,6 @@
 package com.lueing.oh.config;
 
-import com.lueing.oh.commons.jdbc.JdbcProxy;
+import com.lueing.oh.commons.connectors.jdbc.JdbcProxy;
 import com.lueing.oh.dfs.Dfs;
 import com.lueing.oh.dfs.sshpass.SshpassDfsImpl;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.lueing.oh.commons.jdbc;
+package com.lueing.oh.commons.connectors.jdbc;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
