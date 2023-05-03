@@ -29,7 +29,6 @@ public class KafkaConnector {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         // 我们需要处理大消息
         // 512KB * 8 = 4MB 一次采集的最大消息大小, 相对带宽可以在1s内返回
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 8);
         props.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, 8 * 1024 * 1024);
         props.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, 8 * 1024 * 1024);
 
