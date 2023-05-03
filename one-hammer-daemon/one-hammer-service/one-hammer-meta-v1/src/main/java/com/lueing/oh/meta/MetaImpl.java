@@ -32,13 +32,13 @@ public class MetaImpl implements Meta {
     private final JdbcConnector jdbcProxy;
     private final Map<String, Map<String, Integer>> cache = Maps.newHashMap();
     @Override
-    public synchronized Map<String, Integer> meta(String identify, String table) throws HammerMetaException {
-        final String metaKey = identify + "_" + table;
+    public synchronized Map<String, Integer> meta(String sourceId, String table) throws HammerMetaException {
+        final String metaKey = sourceId + "_" + table;
         if (cache.containsKey(metaKey)) {
             return cache.get(metaKey);
         }
 
-        Path remote = Paths.get(identify);
+        Path remote = Paths.get(sourceId);
         if (!Files.exists(Paths.get("sources", remote.getFileName().toString()))) {
             try {
                 dfs.copy(remote, Paths.get("sources"));

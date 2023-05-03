@@ -10,6 +10,11 @@ public class JdbcConnector {
     private final Map<String, Driver> nameDriver = new HashMap<>();
 
     public Connection getConnection(String libs, Connector connector) throws Exception {
+        loadDriver(libs, connector);
+        return DriverManager.getConnection(connector.getJdbcUrl(), connector.getUsername(), connector.getPassword());
+    }
+
+    public void loadDriver(String libs, Connector connector) throws Exception {
         Driver d = nameDriver.get(connector.getDriverClassName());
         if (null == d) {
             d = (Driver) Class.forName(connector.getDriverClassName(), true,
@@ -19,6 +24,5 @@ public class JdbcConnector {
             DriverManager.registerDriver(new ShimDriver(d));
             nameDriver.put(connector.getDriverClassName(), d);
         }
-        return DriverManager.getConnection(connector.getJdbcUrl(), connector.getUsername(), connector.getPassword());
     }
 }
