@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.lueing.oh</groupId>
-        <artifactId>one-hammer</artifactId>
+        <artifactId>one-hammer-plugins</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>one-hammer-plugins</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>kafka2jdbc</module>
-        <module>tushare2kafka</module>
-        <module>crawler2kafka</module>
-    </modules>
+    <artifactId>tushare2kafka</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
